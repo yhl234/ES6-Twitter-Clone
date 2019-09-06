@@ -2,6 +2,7 @@ const tweetButton = document.querySelector("#tweet");
 const textArea = document.querySelector("#exampleFormControlTextarea1");
 const main = document.querySelector("#main");
 const tweets = [];
+
 tweetButton.addEventListener("click", tweeting);
 function tweeting(e) {
 	e.preventDefault();
@@ -12,42 +13,31 @@ function tweeting(e) {
 }
 
 // separate tweet to text, hashtag and no hashtag, and store into object
-//no hashtag is for href
 function hashtag(searchText) {
 	const regex = /\#\w+/g;
 	const hashtags = searchText.match(regex);
+	//store an empty array if there is no hashtag
 	if (!hashtags) {
 		const tweet = {
 			tweet: searchText,
-			hashtag: [],
-			noHashtag: []
+			hashtag: []
 		};
 		return tweet;
 	} else {
+		//remove # from hashtags array and store into object
 		const index = searchText.indexOf("#");
 		const text = searchText.slice(0, index).trim();
-		const noHashtag = hashtags.map(hashtag => hashtag.replace("#", ""));
+		const hashtag = hashtags.map(hashtag => hashtag.replace("#", ""));
 		const tweet = {
 			tweet: text,
-			hashtag: hashtags,
-			noHashtag: noHashtag
+			hashtag: hashtag
 		};
 		return tweet;
 	}
 }
 
-function displayHashtag(array) {
-	let links = array
-		.map(item => {
-			return `
-		<a href=https://twitter.com/hashtag/${item}?src=hashtag_click target="_blank">#${item}</a>
-		`;
-		})
-		.join("");
-
-	console.log(links);
-}
-
+//display, map out the object
+//hashtag links: map the noHashtag array in object
 function display(tweets) {
 	let content = tweets
 		.map(tweet => {
@@ -61,7 +51,7 @@ function display(tweets) {
 					<div class="pl-2"> 
 						<div>Louis L <span class="text-secondary ">@yhl123</span></div>
 						<div class="mt-1">${tweet.tweet} 
-						${tweet.noHashtag
+						${tweet.hashtag
 							.map(item => {
 								return `
 						<a href=https://twitter.com/hashtag/${item}?src=hashtag_click>#${item}</a>
