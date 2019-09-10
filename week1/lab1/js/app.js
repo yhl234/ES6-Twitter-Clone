@@ -14,7 +14,7 @@ function tweeting(e) {
 
 // separate tweet to text, hashtag and no hashtag, and store into object
 function hashtag(searchText) {
-	const regex = /\#\w+/g;
+	let regex = /\#(\w+)/g;
 	const hashtags = searchText.match(regex);
 	//store an empty array if there is no hashtag
 	if (!hashtags) {
@@ -24,9 +24,10 @@ function hashtag(searchText) {
 		};
 		return tweet;
 	} else {
-		//remove # from hashtags array and store into object
+		// get the text before #
 		const index = searchText.indexOf("#");
 		const text = searchText.slice(0, index).trim();
+		// remove # before hashtag
 		const hashtag = hashtags.map(hashtag => hashtag.replace("#", ""));
 		const tweet = {
 			tweet: text,
