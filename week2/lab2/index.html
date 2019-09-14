@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+		<title>Document</title>
+		<link
+			rel="stylesheet"
+			href="https://unpkg.com/tachyons@4.10.0/css/tachyons.min.css"
+		/>
+	</head>
+	<body>
+		<a
+			class="f6 grow no-underline br-pill ba bw2 ph3 pv2 mb2 dib navy"
+			href="#"
+			id="add-user"
+			>Add User</a
+		>
+		<main class="mw6 center"></main>
+
+		<audio
+			id="added"
+			src="https://notificationsounds.com/soundfiles/258be18e31c8188555c2ff05b4d542c3/file-sounds-1126-accomplished.mp3"
+		></audio>
+		<audio
+			id="error"
+			src="https://notificationsounds.com/soundfiles/db85e2590b6109813dafa101ceb2faeb/file-sounds-1114-unsure.mp3"
+		></audio>
+
+		<script>
+			const audioAdded = document.querySelector("#added");
+			const audioError = document.querySelector("#error");
+			let people = [];
+
+			let morePeople = [
+				{
+					index: 2,
+					login: "avcoder",
+					avatar_url: "https://avatars1.githubusercontent.com/u/7874705?v=4",
+					name: "avcoder"
+				},
+				{
+					index: 1,
+					login: "smccrindle",
+					avatar_url: "https://avatars2.githubusercontent.com/u/1187460?v=4",
+					name: "Scott McCrindle"
+				},
+				{
+					index: 0,
+					login: "ifotn",
+					avatar_url: "https://avatars3.githubusercontent.com/u/6728111?v=4",
+					name: null
+				}
+			];
+
+			var main = document.querySelector("main");
+			var addUser = document.querySelector("#add-user");
+
+			function render(ppl = people) {
+				var myArray = ppl
+					.map(function(person) {
+						return `
+			<article class="dt w-100 bb b--black-05 pb2 mt2" href="#0">
+			<div class="dtc w2 w3-ns v-mid">
+			<img src="${
+				person.avatar_url
+			}" class="ba b--black-10 db br-100 w2 w3-ns h2 h3-ns"/>
+			</div>
+			<div class="dtc v-mid pl3">
+			<h1 class="f6 f5-ns fw6 lh-title black mv0">${
+				person.name ? person.name : person.login
+			} </h1>
+			<h2 class="f6 fw4 mt0 mb0 black-60">@${person.login}</h2>
+			</div>
+			<div class="dtc v-mid">
+			<form class="w-100 tr">
+			<button class="f6 button-reset bg-white ba b--black-10 dim pointer pv1 black-60" type="submit" data-index="${
+				person.index
+			}">${person.following ? `- Unfollow` : `+ Follow`}</button>
+			</form>
+			</div>
+			</article>
+			`;
+					})
+					.join("");
+
+				main.innerHTML = myArray;
+			}
+
+			function add1More(e) {
+				e.preventDefault();
+				// insert one user from morePeople to people
+				if (morePeople.length > 0) {
+					audioAdded.currentTime = 0;
+					audioAdded.play();
+					people.push(morePeople.pop());
+				} else {
+					audioError.currentTime = 0;
+					audioError.play();
+				}
+
+				// lab2 start
+				render();
+			}
+			function isFollowing(e) {
+				if (!e.target.matches("button")) {
+					return;
+				}
+				e.preventDefault();
+				const index = Number(e.target.dataset.index);
+				people[index].following = !people[index].following;
+				const log = people[index].following
+					? `Following ${people[index].login}`
+					: `Unfollowing ${people[index].login}`;
+				console.log(log);
+				render();
+			}
+			// function changeState(index) {
+			// 	console.log(morePeople[index]);
+			// 	morePeople[index].following = !morePeople[index].following;
+			// 	console.log(morePeople[index].following);
+			// }
+
+			addUser.addEventListener("click", add1More);
+			main.addEventListener("click", isFollowing);
+		</script>
+	</body>
+</html>

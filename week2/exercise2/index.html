@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
 		<title>Document</title>
 		<link
 			rel="stylesheet"
@@ -16,140 +16,130 @@
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 		<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/1.0.11/purify.min.js"></script> -->
 		<link rel="stylesheet" href="css/style.css" />
-	</head>
-	<body>
-		<div class="container">
-			<div class="row">
-				<div class="col">
-					<div class="list-group" id="leftside">
-						<a href="#" class="list-group-item list-group-item-action">
-							<i class="mdi mdi-home"></i>
-							Home
-						</a>
-						<a
-							href="https://twitter.com/explore"
-							class="list-group-item list-group-item-action"
-						>
-							<i class="mdi mdi-pound"></i>
-							Explore
-						</a>
-						<a href="#" class="list-group-item list-group-item-action">
-							<i class="mdi mdi-bell-outline"></i>&nbsp;Notifications&nbsp;<span
-								class="badge badge-pill badge-primary"
-								>2</span
-							>
-						</a>
-						<a href="#" class="list-group-item list-group-item-action">
-							<i class="mdi mdi-email-outline"></i>&nbsp;Messages
-						</a>
-						<a href="#" class="list-group-item list-group-item-action">
-							<i class="mdi mdi-bookmark-outline"></i>&nbsp;Bookmarks
-						</a>
-						<a href="#" class="list-group-item list-group-item-action">
-							<i class="mdi mdi-format-list-bulleted"></i>&nbsp;Lists
-						</a>
-						<a href="#" class="list-group-item list-group-item-action">
-							<img
-								style="height: 20px; border-radius: 50%"
-								src="https://avatars3.githubusercontent.com/u/43277189?v=4"
-								alt=""
-							/>&nbsp;Profile
-						</a>
-						<a href="#" class="list-group-item list-group-item-action">
-							<i class="mdi mdi-dots-horizontal-circle"></i>&nbsp;More
-						</a>
-					</div>
-				</div>
-				<div class="col-6">
-					<form>
-						<div class="form-group">
-							<h5>Home</h5>
-							<hr />
-							<div class="fb">
-								<img
-									id="avatar"
-									src="https://avatars3.githubusercontent.com/u/43277189?v=4"
-									alt=""
-								/>
-								<textarea
-									placeholder="What's happening?"
-									class="form-control"
-									id="exampleFormControlTextarea1"
-									rows="1"
-								></textarea>
-								<div class="imgGifPoll"></div>
-							</div>
-							<div class="fb">
-								<section>
-									<div id="inserts" class="btn-group mr-2">
-										<button
-											type="button"
-											class="btn btn-secondary mdi mdi-image-outline"
-											aria-label="Insert image"
-										></button>
-										<button
-											type="button"
-											class="btn btn-secondary mdi mdi-gif"
-											aria-label="Insert gif"
-										></button>
-										<button
-											type="button"
-											class="btn btn-secondary mdi mdi-poll"
-											aria-label="Insert Poll"
-											style=""
-										></button>
-										<button
-											type="button"
-											class="btn btn-secondary mdi mdi-emoticon-happy-outline"
-											aria-label="Insert emoji"
-										></button>
-									</div>
-								</section>
-								<button id="tweet" class="btn btn-primary" type="submit">
-									Tweet
-								</button>
-							</div>
-						</div>
-					</form>
-					<main id="main"></main>
-				</div>
-				<div class="col">
-					<div class="input-group input-group-sm mb-3">
-						<div class="input-group-prepend">
-							<span class="input-group-text" id="inputGroup-sizing-default"
-								><i class="mdi mdi-magnify"></i
-							></span>
-						</div>
-						<input
-							type="text"
-							class="form-control"
-							aria-label="Default"
-							aria-describedby="inputGroup-sizing-default"
-							placeholder="Search Twitter"
-						/>
-					</div>
+  </head>
+  <body>
+    <div class="container">
+      <div class="row">
+        <div class="col">
+          <div class="list-group" id="leftside">
+            <a href="#" class="list-group-item list-group-item-action">
+              <i class="mdi mdi-home"></i>
+              Home
+            </a>
+            <a
+              href="https://twitter.com/explore"
+              class="list-group-item list-group-item-action"
+            >
+              <i class="mdi mdi-pound"></i>
+              Explore
+            </a>
+            <a href="#" class="list-group-item list-group-item-action">
+              <i class="mdi mdi-bell-outline"></i>&nbsp;Notifications&nbsp;<span
+                class="badge badge-pill badge-primary"
+                >2</span
+              >
+            </a>
+            <a href="#" class="list-group-item list-group-item-action">
+              <i class="mdi mdi-email-outline"></i>&nbsp;Messages
+            </a>
+            <a href="#" class="list-group-item list-group-item-action">
+              <i class="mdi mdi-bookmark-outline"></i>&nbsp;Bookmarks
+            </a>
+            <a href="#" class="list-group-item list-group-item-action">
+              <i class="mdi mdi-format-list-bulleted"></i>&nbsp;Lists
+            </a>
+            <a href="#" class="list-group-item list-group-item-action ">
+              <img
+                class="myAvatar"
+                style="height: 20px; border-radius: 50%"
+                src=""
+                alt=""
+              />&nbsp;Profile
+            </a>
+            <a href="#" class="list-group-item list-group-item-action">
+              <i class="mdi mdi-dots-horizontal-circle"></i>&nbsp;More
+            </a>
+          </div>
+        </div>
+        <div class="col-6">
+          <form>
+            <div class="form-group">
+              <h5>Home</h5>
+              <hr />
+              <div class="fb">
+                <img class="myAvatar" id="avatar" src="" alt="" />
+                <div class="fb-column">
+                    <textarea placeholder="What's happening?"class="form-control" id="textarea" rows="1"></textarea>
+                    <div id="imgGifPoll"></div>
+                </div>
+              </div>
+              <div class="fb">
+                <section>
+                  <div id="inserts" class="btn-group mr-2">
+                      <input id="uploadPic" type="file" accept="image/png, image/jpeg, image/gif" class="btn btn-secondary mdi mdi-image-outline" aria-label="Insert image"></input>
+                      
+                    <button
+                      type="button"
+                      class="btn btn-secondary mdi mdi-gif"
+                      aria-label="Insert gif"
+                    ></button>
+                    <button
+                      type="button"
+                      class="btn btn-secondary mdi mdi-poll"
+                      aria-label="Insert Poll"
+                      style=""
+                    ></button>
+                    <button
+                      type="button"
+                      class="btn btn-secondary mdi mdi-emoticon-happy-outline"
+                      aria-label="Insert emoji"
+                    ></button>
+                  </div>
+                </section>
+                <button id="tweet" class="btn btn-primary" type="submit">
+                  Tweet
+                </button>
+              </div>
+            </div>
+          </form>
+          <main></main>
+        </div>
+        <div class="col">
+          <div class="input-group input-group-sm mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="inputGroup-sizing-default"
+                ><i class="mdi mdi-magnify"></i
+              ></span>
+            </div>
+            <input
+              type="text"
+              class="form-control"
+              aria-label="Default"
+              aria-describedby="inputGroup-sizing-default"
+              placeholder="Search Twitter"
+            />
+          </div>
 
-					<div class="card text-center">
-						<div class="card-header">
-							<h5 class="card-title">Trends for you</h5>
-						</div>
-						<div class="card-footer text-muted">
-							Show more
-						</div>
-					</div>
-					<br />
-					<div class="card text-center">
-						<div class="card-header">
-							<h5 class="card-title">Who to follow</h5>
-						</div>
-						<div class="card-footer text-muted">
-							Show more
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<script src="js/app.js"></script>
-	</body>
+          <div class="card text-center">
+            <div class="card-header">
+              <h5 class="card-title">Trends for you</h5>
+            </div>
+            <div class="card-footer text-muted">
+              Show more
+            </div>
+          </div>
+          <br />
+          <div class="card text-center">
+            <div class="card-header">
+              <h5 class="card-title">Who to follow</h5>
+            </div>
+            <div class="card-footer text-muted">
+              Show more
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="js/app.js"></script>
+  </body>
 </html>
-·····
