@@ -53,7 +53,14 @@
 					name: null
 				}
 			];
-
+			function* peopleGenerator() {
+				yield {
+					index: 3,
+					login: "yhl234",
+					avatar_url: "https://avatars3.githubusercontent.com/u/43277189?v=4",
+					name: "Louis"
+				};
+			}
 			var main = document.querySelector("main");
 			var addUser = document.querySelector("#add-user");
 
@@ -98,6 +105,8 @@
 				} else {
 					audioError.currentTime = 0;
 					audioError.play();
+					const gen = peopleGenerator();
+					morePeople.push(gen.next().value);
 				}
 
 				// lab2 start
@@ -116,12 +125,6 @@
 				console.log(log);
 				render();
 			}
-			// function changeState(index) {
-			// 	console.log(morePeople[index]);
-			// 	morePeople[index].following = !morePeople[index].following;
-			// 	console.log(morePeople[index].following);
-			// }
-
 			addUser.addEventListener("click", add1More);
 			main.addEventListener("click", isFollowing);
 		</script>
