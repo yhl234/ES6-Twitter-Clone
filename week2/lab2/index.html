@@ -32,6 +32,7 @@
 			const audioAdded = document.querySelector("#added");
 			const audioError = document.querySelector("#error");
 			let people = [];
+			const gen = peopleGenerator();
 
 			let morePeople = [
 				{
@@ -54,12 +55,15 @@
 				}
 			];
 			function* peopleGenerator() {
-				yield {
-					index: 3,
-					login: "yhl234",
-					avatar_url: "https://avatars3.githubusercontent.com/u/43277189?v=4",
-					name: "Louis"
-				};
+				let i = 3;
+				while (true) {
+					yield {
+						index: i++,
+						login: `yhl${i * 7}`,
+						avatar_url: `https://picsum.photos/id/${i}/200/200`,
+						name: "Louis"
+					};
+				}
 			}
 			var main = document.querySelector("main");
 			var addUser = document.querySelector("#add-user");
@@ -102,11 +106,10 @@
 					audioAdded.currentTime = 0;
 					audioAdded.play();
 					people.push(morePeople.pop());
+					morePeople.unshift(gen.next().value);
 				} else {
 					audioError.currentTime = 0;
 					audioError.play();
-					const gen = peopleGenerator();
-					morePeople.push(gen.next().value);
 				}
 
 				// lab2 start
