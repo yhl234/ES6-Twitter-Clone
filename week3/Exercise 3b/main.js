@@ -1,10 +1,11 @@
 const button = document.querySelector('button');
 const gifsArea = document.querySelector('#gifsArea');
-const gifs = [];
+let gifs = [];
 
 function getGifs() {
   // get input
   const searchValue = document.querySelector('input').value;
+  gifs = [];
   fetch(
     `https://api.giphy.com/v1/gifs/search?q=${searchValue}&api_key=61LS6sJkDZ1d98sT1GNneTglTSt1L4z6&limit=10`
   )
