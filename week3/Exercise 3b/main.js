@@ -22,11 +22,13 @@ function getGifs() {
     });
 }
 function chooseGif(e) {
+  // only target the list of gifs
   if (!e.target.matches('[data-index]')) {
     return;
   }
   e.preventDefault();
   const chose = Number(e.target.dataset.index);
+  // get better version of gif
   gifsArea.innerHTML = `<img src="${gifs[chose].images.fixed_height.url}" />`;
 }
 button.addEventListener('click', getGifs);
