@@ -64,11 +64,17 @@ function searchGif() {
   // To use closePopup function, exit should have same number of parentNode
   popup.innerHTML = `
 	<div>
-	<div class="exit">X</div>
+		<button type="button" class="exit">X</button>
 	</div>
-	<input id="inputGif" type="text" class="form-control" placeholder="Search for Gif" />
-	<button id="searchGifBtn" type="button" class="btn btn-outline-secondary">Search</button>
-	<div id="gifsArea"></div>
+	<form class="container d-flex p-1 mb-1">
+		<input id="inputGif" type="text" class="form-control" placeholder="Search for Gif" />
+		<button id="searchGifBtn" type="button" class="btn btn-outline-secondary">Search</button>
+	</form>
+	<div class="custom-control custom-switch">
+		<input type="checkbox" class="custom-control-input" id="switchGif">
+		<label class="custom-control-label" for="switchGif">Toggle this switch element</label>
+	</div>
+	<div id="gifsArea" class="d-flex flex-wrap"></div>
 	`;
   popup.classList.add('popup');
   body.appendChild(popup);
