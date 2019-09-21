@@ -3,6 +3,8 @@ const gifBtn = document.querySelector('#gifBtn');
 const body = document.querySelector('body');
 let gifs = [];
 let selectedGif = '';
+let isImg = false;
+let isMoving = false;
 
 // STEP 1 - Change your avatar URL here
 const AVATAR_URL = 'https://avatars3.githubusercontent.com/u/43277189?v=4';
@@ -22,7 +24,6 @@ const tweetButton = document.querySelector('#tweet');
 const textArea = document.querySelector('#textarea');
 const main = document.querySelector('main');
 const tweets = [];
-let isImg = false;
 
 // separate tweet to text, hashtag and no hashtag, and store into object
 function handleTweet(searchText) {
@@ -63,16 +64,19 @@ function searchGif() {
   const popup = document.createElement('div');
   // To use closePopup function, exit should have same number of parentNode
   popup.innerHTML = `
-	<div>
-		<button type="button" class="exit">X</button>
+	<div id="exit">
+		<button type="button" class="exit mdi mdi-window-close" >
+		</button>
 	</div>
 	<form class="container d-flex p-1 mb-1">
 		<input id="inputGif" type="text" class="form-control" placeholder="Search for Gif" />
 		<button id="searchGifBtn" type="button" class="btn btn-outline-secondary">Search</button>
 	</form>
-	<div class="custom-control custom-switch">
-		<input type="checkbox" class="custom-control-input" id="switchGif">
-		<label class="custom-control-label" for="switchGif">Toggle this switch element</label>
+	<div id="switchgifsarea">
+		<div class="custom-control custom-switch mt-2">
+			<input type="checkbox" class="custom-control-input" id="switchGif">
+			<label class="custom-control-label" for="switchGif">Toggle this switch element</label>
+		</div>
 	</div>
 	<div id="gifsArea" class="d-flex flex-wrap"></div>
 	`;
@@ -80,12 +84,15 @@ function searchGif() {
   body.appendChild(popup);
   const searchGifBtn = document.querySelector('#searchGifBtn');
   const exitBtn = document.querySelector('.exit');
+  const switchGif = document.querySelector('#switchGif');
 
+  switchGif.addEventListener('change', gifToggle);
   searchGifBtn.addEventListener('click', getGifs);
   exitBtn.addEventListener('click', closePopup);
 }
 // Query gifs and display them
-function getGifs() {
+function getGifs(e) {
+  e.preventDefault();
   // get input
   const searchValue = document.querySelector('#inputGif').value;
   gifs = [];
@@ -99,13 +106,32 @@ function getGifs() {
       const gifsHTML = gifs
         .map(
           (gif, i) =>
-            `<img src="${gif.images.fixed_height_small.url}" data-index="${i}"/>`
+            `<img class="gif" src="${gif.images.fixed_height_small_still.url}" data-index="${i}"/>`
         )
         .join('');
       const gifsArea = document.querySelector('#gifsArea');
+      const switchGif = document.querySelector('#switchGif');
+      switchGif.checked = false;
+      isMoving = false;
       gifsArea.innerHTML = gifsHTML;
       gifsArea.addEventListener('click', chooseGif);
     });
+}
+// Toggle gifs
+function gifToggle() {
+  const gifs = document.querySelectorAll('.gif');
+  isMoving = !isMoving;
+  if (isMoving === true) {
+    gifs.forEach(gif => {
+      const src = gif.src.replace('100_s.gif', '100.gif');
+      gif.src = src;
+    });
+  } else {
+    gifs.forEach(gif => {
+      const src = gif.src.replace('100.gif', '100_s.gif');
+      gif.src = src;
+    });
+  }
 }
 
 // Display selected gif
