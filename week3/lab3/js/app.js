@@ -1,3 +1,8 @@
+// Avatar----------------------------------------
+const AVATAR_URL = 'https://avatars3.githubusercontent.com/u/43277189?v=4';
+const myAvatar = document.querySelectorAll('.myAvatar');
+myAvatar.forEach(img => (img.src = AVATAR_URL));
+
 // Declare for Gifs upload
 const gifBtn = document.querySelector('#gifBtn');
 const body = document.querySelector('body');
@@ -5,26 +10,16 @@ let gifs = [];
 let selectedGif = '';
 let isImg = false;
 let isMoving = false;
-
-// STEP 1 - Change your avatar URL here
-const AVATAR_URL = 'https://avatars3.githubusercontent.com/u/43277189?v=4';
-const myAvatar = document.querySelectorAll('.myAvatar');
-myAvatar.forEach(img => (img.src = AVATAR_URL));
-
-// STEP 2 - Declare constant imgGifPoll
+// upload image
 const imgGifPoll = document.querySelector('#imgGifPoll');
-
-// STEP 3 - Add a change event listener to #uploadPic
 const uploadPic = document.querySelector('#uploadPic');
-uploadPic.addEventListener('input', handleFileSelect);
-// STEP 5 - Submit hosted url in Blackboard
-
-// copy from lab1
+// tweet
 const tweetButton = document.querySelector('#tweet');
 const textArea = document.querySelector('#textarea');
 const main = document.querySelector('main');
 const tweets = [];
 
+// functions ----------------------------------------
 // separate tweet to text, hashtag and no hashtag, and store into object
 function handleTweet(searchText) {
   const regex = /#(\w+)/g;
@@ -155,7 +150,7 @@ function closePopup(e) {
   );
 }
 
-// preview selected gif and img before tweeting
+// Preview selected gif and img before tweeting
 function previewGif(index) {
   imgGifPoll.innerHTML = `<img src="${gifs[index].images.fixed_height.url}" />`;
 }
@@ -226,5 +221,10 @@ function displayTweets(tweets) {
   main.innerHTML = content;
 }
 
-tweetButton.addEventListener('click', tweeting);
+// EventListeners----------------------------------------
+// img button
+uploadPic.addEventListener('input', handleFileSelect);
+// gif button
 gifBtn.addEventListener('click', searchGif);
+// tweet button
+tweetButton.addEventListener('click', tweeting);
