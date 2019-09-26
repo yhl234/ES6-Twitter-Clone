@@ -152,14 +152,14 @@ aside i {
 	padding-left: 18px;
 	margin-right: 15px;
 }
-#exit {
+.exit {
 	height: 30px;
 	top: 0;
 	left: 0;
 	width: 30px;
 	position: absolute;
 }
-.exit {
+.exitBtn {
 	display: block;
 	background: transparent;
 	border: 0;
@@ -190,4 +190,8 @@ aside i {
 	width: 20px;
 	height: 20px;
 	margin: 2px;
+}
+img[data-category],
+.emoji {
+	cursor: pointer;
 }

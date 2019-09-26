@@ -57,13 +57,13 @@ function handleTweet(searchText) {
   return tweet;
 }
 
-// Create a popup windou when gif icon onclick
+// Create a popup window when gif icon onclick
 function searchGif() {
   const popup = document.createElement('div');
   // To use closePopup function, exit should have same number of parentNode
   popup.innerHTML = `
-	<div id="exit">
-		<button type="button" class="exit mdi mdi-window-close" >
+	<div class="exit">
+		<button type="button" class="exitBtn mdi mdi-window-close" >
 		</button>
 	</div>
 	<form class="container d-flex p-1 mb-1">
@@ -81,7 +81,7 @@ function searchGif() {
   popup.classList.add('popup');
   body.appendChild(popup);
   const searchGifBtn = document.querySelector('#searchGifBtn');
-  const exitBtn = document.querySelector('.exit');
+  const exitBtn = document.querySelector('.exitBtn');
   const switchGif = document.querySelector('#switchGif');
 
   switchGif.addEventListener('change', gifToggle);
@@ -166,7 +166,7 @@ function handleFileSelect(e) {
   reader.readAsDataURL(e.target.files[0]);
 }
 
-// Search emoji
+// fetch emoji, store it and display it
 async function browseEmoji() {
   const response = await fetch(
     'https://unpkg.com/emoji.json@12.1.0/emoji.json'
@@ -174,17 +174,20 @@ async function browseEmoji() {
   const data = await response.json();
   emojis.push(...data);
   const emojiHtml = emojis
-    .map(emoji => `<div class="emoji">${emoji.char}</div>`)
+    .map(
+      emoji =>
+        `<div class="emoji" data-char="${emoji.char}">${emoji.char}</div>`
+    )
     .join('');
   const popup = document.createElement('div');
   // To use closePopup function, exit should have same number of parentNode
   popup.innerHTML = `
-  <div id="exit">
-  	<button type="button" class="exit mdi mdi-window-close" >
+  <div class="exit">
+  	<button type="button" class="exitBtn mdi mdi-window-close" >
   </button>
   </div>
   <div class="container d-flex p-1 mb-1">
-  	<input id="inputGif" type="text" class="form-control" placeholder="Search for Emoji" />
+  	<input id="inputEmoji" type="text" class="form-control" placeholder="Search for Emoji" />
 	</div>
 	 <div class="modal-header">
             <div class="btn-group mr-2 emojimenu" id="emojiCategories">
@@ -204,8 +207,37 @@ async function browseEmoji() {
   `;
   popup.classList.add('popup');
   body.appendChild(popup);
-  const exitBtn = document.querySelector('.exit');
+  const exitBtn = document.querySelector('.exitBtn');
   exitBtn.addEventListener('click', closePopup);
+  const inputEmoji = document.querySelector('#inputEmoji');
+  const categoryEmoji = document.querySelectorAll('[data-category]');
+  inputEmoji.addEventListener('keyup', searchEmojis);
+  categoryEmoji.forEach(i => i.addEventListener('click', searchEmojis));
+  const emojiArea = document.querySelector('#emojiArea');
+  emojiArea.addEventListener('click', addEmoji);
+}
+// search emoji by data-category or input
+function searchEmojis(e) {
+  const emojiInput = e.target.dataset.category || e.target.value;
+  const emojiArea = document.querySelector('#emojiArea');
+  emojiArea.innerHTML = emojis
+    .filter(
+      emoji =>
+        emoji.name.includes(emojiInput) || emoji.category.includes(emojiInput)
+    )
+    .map(
+      emoji =>
+        `<div class="emoji" data-char="${emoji.char}">${emoji.char}</div>`
+    )
+    .join('');
+  emojiArea.scrollTop = 0;
+}
+
+function addEmoji(e) {
+  if (!e.target.matches('[data-char]')) {
+    return;
+  }
+  textArea.value += e.target.dataset.char;
 }
 
 // Store tweet to tweets array and clean textarea and preview
