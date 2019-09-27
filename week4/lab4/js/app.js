@@ -5,7 +5,11 @@ myAvatar.forEach(img => (img.src = AVATAR_URL));
 
 // Declare for Gifs upload
 const gifBtn = document.querySelector('#gifBtn');
-const body = document.querySelector('body');
+const searchGifBtn = document.querySelector('#searchGifBtn');
+const switchGif = document.querySelector('#switchGif');
+const gifPopup = document.querySelector('#gifPopup');
+const gifsArea = document.querySelector('#gifsArea');
+
 let gifs = [];
 let selectedGif = '';
 let isImg = false;
@@ -14,8 +18,16 @@ let isMoving = false;
 const imgGifPoll = document.querySelector('#imgGifPoll');
 const uploadPic = document.querySelector('#uploadPic');
 // Emoji
+const emojiPopup = document.querySelector('#emojiPopup');
 const emojiBtn = document.querySelector('#emojiBtn');
 const emojis = [];
+const emojiArea = document.querySelector('#emojiArea');
+const inputEmoji = document.querySelector('#inputEmoji');
+const categoryEmoji = document.querySelectorAll('[data-category]');
+
+// Exit button
+const exitBtns = document.querySelectorAll('.exitBtn');
+
 // tweet
 const tweetButton = document.querySelector('#tweet');
 const textArea = document.querySelector('#textarea');
@@ -59,35 +71,9 @@ function handleTweet(searchText) {
 
 // Create a popup window when gif icon onclick
 function searchGif() {
-  const popup = document.createElement('div');
-  // To use closePopup function, exit should have same number of parentNode
-  popup.innerHTML = `
-	<div class="exit">
-		<button type="button" class="exitBtn mdi mdi-window-close" >
-		</button>
-	</div>
-	<form class="container d-flex p-1 mb-1">
-		<input id="inputGif" type="text" class="form-control" placeholder="Search for Gif" />
-		<button id="searchGifBtn" type="button" class="btn btn-outline-secondary">Search</button>
-	</form>
-	<div id="switchgifsarea">
-		<div class="custom-control custom-switch mt-2">
-			<input type="checkbox" class="custom-control-input" id="switchGif">
-			<label class="custom-control-label" for="switchGif">Toggle this switch element</label>
-		</div>
-	</div>
-	<div id="gifsArea" class="d-flex flex-wrap"></div>
-	`;
-  popup.classList.add('popup');
-  body.appendChild(popup);
-  const searchGifBtn = document.querySelector('#searchGifBtn');
-  const exitBtn = document.querySelector('.exitBtn');
-  const switchGif = document.querySelector('#switchGif');
-
-  switchGif.addEventListener('change', gifToggle);
-  searchGifBtn.addEventListener('click', getGifs);
-  exitBtn.addEventListener('click', closePopup);
+  gifPopup.classList.toggle('hide');
 }
+
 // Query gifs and display them
 function getGifs(e) {
   e.preventDefault();
@@ -107,14 +93,13 @@ function getGifs(e) {
             `<img class="gif" src="${gif.images.fixed_height_small_still.url}" data-index="${i}"/>`
         )
         .join('');
-      const gifsArea = document.querySelector('#gifsArea');
-      const switchGif = document.querySelector('#switchGif');
       switchGif.checked = false;
       isMoving = false;
       gifsArea.innerHTML = gifsHTML;
       gifsArea.addEventListener('click', chooseGif);
     });
 }
+
 // Toggle gifs
 function gifToggle() {
   const gifs = document.querySelectorAll('.gif');
@@ -132,6 +117,16 @@ function gifToggle() {
   }
 }
 
+// Delete the popup
+function togglePopup(e) {
+  e.target.parentNode.parentNode.classList.toggle('hide');
+}
+
+// Preview selected gif and img before tweeting
+function previewGif(index) {
+  imgGifPoll.innerHTML = `<img src="${gifs[index].images.fixed_height.url}" />`;
+}
+
 // Display selected gif
 function chooseGif(e) {
   // only target the list of gifs
@@ -143,19 +138,7 @@ function chooseGif(e) {
   // get better version of gif
   selectedGif = gifs[choseIndex].images.fixed_height.url;
   previewGif(choseIndex);
-  closePopup(e);
-}
-
-// Delete the popup
-function closePopup(e) {
-  e.target.parentNode.parentNode.parentNode.removeChild(
-    e.target.parentNode.parentNode
-  );
-}
-
-// Preview selected gif and img before tweeting
-function previewGif(index) {
-  imgGifPoll.innerHTML = `<img src="${gifs[index].images.fixed_height.url}" />`;
+  togglePopup(e);
 }
 function handleFileSelect(e) {
   const reader = new FileReader();
@@ -167,7 +150,7 @@ function handleFileSelect(e) {
 }
 
 // fetch emoji, store it and display it
-async function browseEmoji() {
+async function loadEmoji() {
   const response = await fetch(
     'https://unpkg.com/emoji.json@12.1.0/emoji.json'
   );
@@ -179,47 +162,15 @@ async function browseEmoji() {
         `<div class="emoji" data-char="${emoji.char}">${emoji.char}</div>`
     )
     .join('');
-  const popup = document.createElement('div');
-  // To use closePopup function, exit should have same number of parentNode
-  popup.innerHTML = `
-  <div class="exit">
-  	<button type="button" class="exitBtn mdi mdi-window-close" >
-  </button>
-  </div>
-  <div class="container d-flex p-1 mb-1">
-  	<input id="inputEmoji" type="text" class="form-control" placeholder="Search for Emoji" />
-	</div>
-	 <div class="modal-header">
-            <div class="btn-group mr-2 emojimenu" id="emojiCategories">
-                <img src="https://abs-0.twimg.com/emoji/v2/svg/1f600.svg" alt="" data-category="Smileys">
-                <img src="https://abs-0.twimg.com/emoji/v2/svg/1f43b.svg" alt="" data-category="Animals">
-                <img src="https://abs-0.twimg.com/emoji/v2/svg/1f354.svg" alt="" data-category="Food">
-                <img src="https://abs-0.twimg.com/emoji/v2/svg/26bd.svg" alt="" data-category="Activities">
-                <img src="https://abs-0.twimg.com/emoji/v2/svg/1f698.svg" alt="" data-category="Travel">
-                <img src="https://abs-0.twimg.com/emoji/v2/svg/1f4a1.svg" alt="" data-category="Objects">
-                <img src="https://abs-0.twimg.com/emoji/v2/svg/1f523.svg" alt="" data-category="Symbols">
-                <img src="https://abs-0.twimg.com/emoji/v2/svg/1f6a9.svg" alt="" data-category="Flags">
-            </div>
-          </div>
-  <div id="emojiArea">
-    ${emojiHtml}
-  </div>
-  `;
-  popup.classList.add('popup');
-  body.appendChild(popup);
-  const exitBtn = document.querySelector('.exitBtn');
-  exitBtn.addEventListener('click', closePopup);
-  const inputEmoji = document.querySelector('#inputEmoji');
-  const categoryEmoji = document.querySelectorAll('[data-category]');
-  inputEmoji.addEventListener('keyup', searchEmojis);
-  categoryEmoji.forEach(i => i.addEventListener('click', searchEmojis));
-  const emojiArea = document.querySelector('#emojiArea');
-  emojiArea.addEventListener('click', addEmoji);
+  emojiArea.innerHTML = emojiHtml;
 }
+function browseEmoji() {
+  emojiPopup.classList.toggle('hide');
+}
+
 // search emoji by data-category or input
 function searchEmojis(e) {
   const emojiInput = e.target.dataset.category || e.target.value;
-  const emojiArea = document.querySelector('#emojiArea');
   emojiArea.innerHTML = emojis
     .filter(
       emoji =>
@@ -240,22 +191,9 @@ function addEmoji(e) {
   textArea.value += e.target.dataset.char;
 }
 
-// Store tweet to tweets array and clean textarea and preview
-// hashtag links: map the noHashtag array in object
-function tweeting(e) {
-  e.preventDefault();
-  const tweet = handleTweet(textArea.value);
-  tweets.unshift(tweet);
-  textArea.value = '';
-  imgGifPoll.innerHTML = '';
-  selectedGif = '';
-  isImg = false;
-  displayTweets(tweets);
-}
-
 // display from tweets array
-function displayTweets(tweets) {
-  const content = tweets
+function displayTweets(tw) {
+  const content = tw
     .map(
       tweet => `
 				<div class="fb container row justify-content-start border rounded p-3 mt-3">
@@ -297,13 +235,42 @@ function displayTweets(tweets) {
     .join('');
   main.innerHTML = content;
 }
+// Store tweet to tweets array and clean textarea and preview
+// hashtag links: map the noHashtag array in object
+function tweeting(e) {
+  e.preventDefault();
+  const tweet = handleTweet(textArea.value);
+  tweets.unshift(tweet);
+  textArea.value = '';
+  imgGifPoll.innerHTML = '';
+  selectedGif = '';
+  isImg = false;
+  emojiPopup.classList.add('hide');
+
+  displayTweets(tweets);
+}
 
 // EventListeners----------------------------------------
+// Exit button
+exitBtns.forEach(exitBtn => exitBtn.addEventListener('click', togglePopup));
 // img button
 uploadPic.addEventListener('input', handleFileSelect);
 // gif button
 gifBtn.addEventListener('click', searchGif);
+
+// gif------------------------------------------------------
+switchGif.addEventListener('change', gifToggle);
+searchGifBtn.addEventListener('click', getGifs);
+// emoji---------------------------------------------------
+// load emoji
+document.addEventListener('DOMContentLoaded', loadEmoji);
 // emoji button
 emojiBtn.addEventListener('click', browseEmoji);
+// search emoji
+inputEmoji.addEventListener('keyup', searchEmojis);
+categoryEmoji.forEach(i => i.addEventListener('click', searchEmojis));
+// Add selected emoji to textarea
+emojiArea.addEventListener('click', addEmoji);
+// emoji---------------------------------------------------
 // tweet button
 tweetButton.addEventListener('click', tweeting);

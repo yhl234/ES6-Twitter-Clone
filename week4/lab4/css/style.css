@@ -195,3 +195,6 @@ img[data-category],
 .emoji {
 	cursor: pointer;
 }
+.hide {
+	display: none;
+}
