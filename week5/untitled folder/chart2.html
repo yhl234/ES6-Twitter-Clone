@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+		<title>Document</title>
+		<script
+			type="text/javascript"
+			nonce="2380aced122c4a63859f64cd217"
+			src="//local.adguard.org?ts=1570036811291&amp;type=content-script&amp;dmn=gc.blackboard.com&amp;css=1&amp;js=1&amp;gcss=1&amp;rel=1&amp;rji=1"
+		></script>
+		<script
+			type="text/javascript"
+			nonce="2380aced122c4a63859f64cd217"
+			src="//local.adguard.org?ts=1570036811291&amp;name=AdGuard%20Popup%20Blocker&amp;name=AdGuard%20Assistant&amp;name=Web%20of%20Trust&amp;name=AdGuard%20Extra&amp;type=user-script"
+		></script>
+		<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+	</head>
+	<body>
+		<canvas id="myChart" width="200" height="100"></canvas>
+		<script>
+			let votes = {};
+			async function getData() {
+				const data = await fetch(
+					"http://aws.computerstudi.es/~gc800182472/comp2112/game1/api.php"
+				);
+				const json = await data.json();
+				console.log(json);
+			}
+			var ctx = document.getElementById("myChart").getContext("2d");
+			var myChart = new Chart(ctx, {
+				type: "bar",
+				data: {
+					labels: ["Red", "Blue", "Yellow", "Green"],
+					datasets: [
+						{
+							label: "# of Votes",
+							data: [12, 19, 3, 5],
+							backgroundColor: [
+								"rgba(255, 99, 132, 0.2)",
+								"rgba(54, 162, 235, 0.2)",
+								"rgba(255, 206, 86, 0.2)",
+								"rgba(75, 192, 192, 0.2)"
+							],
+							borderColor: [
+								"rgba(255, 99, 132, 1)",
+								"rgba(54, 162, 235, 1)",
+								"rgba(255, 206, 86, 1)",
+								"rgba(75, 192, 192, 1)"
+							],
+							borderWidth: 1
+						}
+					]
+				},
+				options: {
+					scales: {
+						yAxes: [
+							{
+								ticks: {
+									beginAtZero: true
+								}
+							}
+						]
+					}
+				}
+			});
+		</script>
+	</body>
+</html>
