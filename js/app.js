@@ -14,9 +14,13 @@ let gifs = [];
 let selectedGif = '';
 let isImg = false;
 let isMoving = false;
-// upload image
+let isPolling = false;
+// Preview place
 const imgGifPoll = document.querySelector('#imgGifPoll');
+// Upload image
 const uploadPic = document.querySelector('#uploadPic');
+// Poll
+const pollBtn = document.querySelector('#pollBtn');
 // Emoji
 const emojiPopup = document.querySelector('#emojiPopup');
 const emojiBtn = document.querySelector('#emojiBtn');
@@ -51,7 +55,14 @@ function handleTweet(searchText) {
     isImg = true;
     tweet.img = selectedGif;
   }
-
+  if (isPolling) {
+    tweet.poll = [
+      document.querySelector('#pollchoice1').value,
+      document.querySelector('#pollchoice2').value,
+      document.querySelector('#pollchoice3').value,
+      document.querySelector('#pollchoice4').value,
+    ];
+  }
   if (!hashtags) {
     tweet.tweet = searchText;
     tweet.hashtag = [];
@@ -68,7 +79,11 @@ function handleTweet(searchText) {
 
   return tweet;
 }
-
+/*
+----------------------------------------------
+Gif
+----------------------------------------------
+*/
 // Create a popup window when gif icon onclick
 function searchGif() {
   gifPopup.classList.toggle('hide');
@@ -149,6 +164,76 @@ function handleFileSelect(e) {
   reader.readAsDataURL(e.target.files[0]);
 }
 
+/*
+----------------------------------------------
+Poll
+----------------------------------------------
+*/
+// Show form after pollBtn click
+function insertPoll() {
+  isPolling = true;
+  textArea.placeholder = 'Ask a question...';
+  imgGifPoll.innerHTML = `
+                <form>
+                  <div class="form-group">
+                    <input type="text" class="form-control" id="pollchoice1" aria-describedby="" maxlength="25" placeholder="Choice 1">
+                    <br>
+                    <input type="text" class="form-control" id="pollchoice2" aria-describedby="" maxlength="25" placeholder="Choice 2">
+                    <br>
+                    <input type="text" class="form-control" id="pollchoice3" aria-describedby="" maxlength="25" placeholder="Choice 3">
+                    <br>
+                    <input type="text" class="form-control" id="pollchoice4" aria-describedby="" maxlength="25" placeholder="Choice 4">
+                    <br><br>
+                    <h6>Poll length</h6>
+                    <hr style="margin:0">
+                    <div class="row">
+                      <div class="col">
+                        <label for="polldays">Days</label>
+                        <select class="form-control" id="polldays">
+                          <option>0</option>
+                          <option selected>1</option>
+                          <option>2</option>
+                          <option>3</option>
+                          <option>4</option>
+                          <option>5</option>
+                        </select>
+                      </div>
+                      <div class="col">
+                        <label for="pollhours">Hours</label>
+                        <select class="form-control" id="pollhours">
+                          <option>0</option>
+                          <option>1</option>
+                          <option>2</option>
+                          <option>3</option>
+                          <option>4</option>
+                          <option>5</option>
+                        </select>
+                      </div>
+                      <div class="col">
+                        <label for="pollminutes">Minutes</label>
+                        <select class="form-control" id="pollminutes">
+                          <option>0</option>
+                          <option>1</option>
+                          <option>2</option>
+                          <option>3</option>
+                          <option>4</option>
+                          <option>5</option>
+                        </select>
+                      </div>                        
+                    </div>
+                  </div>
+                </form>
+
+	`;
+}
+// Store input in to object
+function handlePoll() {}
+/*
+----------------------------------------------
+Emoji
+----------------------------------------------
+*/
+
 // fetch emoji, store it and display it
 async function loadEmoji() {
   const response = await fetch(
@@ -194,6 +279,9 @@ function addEmoji(e) {
 
 // display from tweets array
 function displayTweets(tw) {
+  if (!tw.length > 0) {
+    return;
+  }
   const content = tw
     .map(
       tweet => `
@@ -219,16 +307,43 @@ function displayTweets(tw) {
               tweet.img
                 ? `<img id="tweetImg" class="thumb" src="${tweet.img}"  style="width:100%"/>`
                 : ''
+            }						
+						${
+              isPolling
+                ? `<div class="poll flex-col">
+									${tweet.poll
+                    .map(
+                      (choice, i) => `
+										<button class="vote" value="${i}">${choice}</button>
+										`
+                    )
+                    .join('')}
+										</div>`
+                : ''
             }
-                
-						<div>
-            
-						
-							<span class="mdi mdi-comment-outline pt-3 pr-3 pb-3"></span>
-							<span class="mdi mdi-twitter-retweet p-3"></span>
-							<span class="mdi mdi-upload p-3"></span>
-							<span class="mdi mdi-heart p-3"></span>
-						</div>
+						 <div id="reactions" class="btn-group mr-2">
+                        <button
+                            type="button"
+                            class="btn btn-secondary mdi mdi-message-outline"
+                            aria-label="reply"
+                        ></button>
+                        <button
+                            type="button"
+                            class="btn btn-secondary mdi mdi-twitter-retweet"
+                            aria-label="retweet"
+                        ></button>
+                        <button
+                            type="button"
+                            class="btn btn-secondary mdi mdi-heart-outline"
+                            aria-label="like"
+                            style=""
+                        ></button>
+                        <button
+                            type="button"
+                            class="btn btn-secondary mdi mdi-upload"
+                            aria-label="share"
+                        ></button>
+                    </div>
 					</div>
 				</div>
 		`
@@ -247,7 +362,6 @@ function tweeting(e) {
   selectedGif = '';
   isImg = false;
   emojiPopup.classList.add('hide');
-
   displayTweets(tweets);
 }
 
@@ -258,6 +372,8 @@ exitBtns.forEach(exitBtn => exitBtn.addEventListener('click', togglePopup));
 uploadPic.addEventListener('input', handleFileSelect);
 // gif button
 gifBtn.addEventListener('click', searchGif);
+// Poll button
+pollBtn.addEventListener('click', insertPoll);
 
 // gif------------------------------------------------------
 switchGif.addEventListener('change', gifToggle);

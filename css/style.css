@@ -91,6 +91,23 @@ aside p {
 	border-radius: 50% !important;
 }
 
+#reactions {
+	transform: translateX(-0.75rem);
+}
+.flex-col {
+	display: flex;
+	flex-direction: column;
+	align-content: space-between;
+	justify-content: space-between;
+	height: 170px;
+}
+
+.flex-col .vote {
+	border: 2px solid #1da1f2;
+	background-color: #fff;
+	color: #1da1f2;
+	border-radius: 17px;
+}
 #inserts button {
 	font-size: 20px !important;
 }
