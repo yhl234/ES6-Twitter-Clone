@@ -15,6 +15,7 @@ let selectedGif = '';
 let isImg = false;
 let isMoving = false;
 let isPolling = false;
+let votes = {};
 // Preview place
 const imgGifPoll = document.querySelector('#imgGifPoll');
 // Upload image
@@ -226,8 +227,21 @@ function insertPoll() {
 
 	`;
 }
+// Get vote data
+async function getVotes() {
+  const res = await fetch(
+    'https://my.api.mockaroo.com/twitter_vote.json?key=bd549ad0'
+  );
+  const voteJson = await res.json();
+  votes = voteJson;
+  console.log(votes);
+}
 // Store input in to object
-function handlePoll() {}
+function vote(e) {
+  if (e.target.matches('.vote')) {
+    console.log(e.target.parentNode.dataset.index);
+  }
+}
 /*
 ----------------------------------------------
 Emoji
@@ -284,14 +298,14 @@ function displayTweets(tw) {
   }
   const content = tw
     .map(
-      tweet => `
+      (tweet, index) => `
 				<div class="fb container row justify-content-start border rounded p-3 mt-3">
 					<img
 						class="avatar"
 						src="https://avatars3.githubusercontent.com/u/43277189?v=4"
 						alt=""
 					/>
-					<div class="pl-2"> 
+					<div class="pl-2" data-index="${index}"> 
 						<div>Louis L <span class="text-secondary ">@yhl123</span></div>
 						<div class="mt-1">${tweet.tweet} 
 						${tweet.hashtag
@@ -310,7 +324,7 @@ function displayTweets(tw) {
             }						
 						${
               isPolling
-                ? `<div class="poll flex-col">
+                ? `<div class="poll flex-col" data-index="${index}">
 									${tweet.poll
                     .map(
                       (choice, i) => `
@@ -374,6 +388,8 @@ uploadPic.addEventListener('input', handleFileSelect);
 gifBtn.addEventListener('click', searchGif);
 // Poll button
 pollBtn.addEventListener('click', insertPoll);
+// main
+main.addEventListener('click', vote);
 
 // gif------------------------------------------------------
 switchGif.addEventListener('change', gifToggle);
