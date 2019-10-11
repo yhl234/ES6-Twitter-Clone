@@ -215,3 +215,33 @@ img[data-category],
 .hide {
 	display: none;
 }
+.flex-col {
+	display: flex;
+	flex-direction: column;
+	align-content: space-between;
+	justify-content: space-between;
+	height: 170px;
+}
+
+.flex-col .vote {
+	border: 2px solid #1da1f2;
+	background-color: #fff;
+	color: #1da1f2;
+	border-radius: 17px;
+}
+
+.bargraph {
+	display: flex;
+	width: 90%;
+	justify-content: space-between;
+	margin: 10px 0;
+}
+
+.bar {
+	background-color: lightgray;
+	border-radius: 3px;
+}
+
+.chosen {
+	background-color: powderblue;
+}

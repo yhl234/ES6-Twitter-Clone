@@ -15,6 +15,7 @@ let selectedGif = '';
 let isImg = false;
 let isMoving = false;
 let isPolling = false;
+let isVoted = false;
 let votes = {};
 // Preview place
 const imgGifPoll = document.querySelector('#imgGifPoll');
@@ -76,7 +77,7 @@ function handleTweet(searchText) {
     tweet.tweet = text;
     tweet.hashtag = hashtag;
   }
-  console.log(tweet);
+  // console.log(tweet);
 
   return tweet;
 }
@@ -233,14 +234,49 @@ async function getVotes() {
     'https://my.api.mockaroo.com/twitter_vote.json?key=bd549ad0'
   );
   const voteJson = await res.json();
-  votes = voteJson;
+  votes = await voteJson;
   console.log(votes);
 }
 // Store input in to object
-function vote(e) {
+async function vote(e) {
   if (e.target.matches('.vote')) {
-    console.log(e.target.parentNode.dataset.index);
+    await getVotes();
+    // console.log(voteResult);
+    const tweetsIndex = e.target.parentNode.dataset.index;
+    console.log(tweets[tweetsIndex]); // the poll are being vote
+    tweets[tweetsIndex].result = votes;
+    getPercent(tweetsIndex);
   }
+}
+function getPercent(tweetsIndex) {
+  const res = tweets[tweetsIndex].result;
+  const total = Number(res.a) + Number(res.b) + Number(res.c) + Number(res.d);
+  const percents = {
+    a: Math.floor((Number(res.a) / total) * 100),
+    b: Math.floor((Number(res.b) / total) * 100),
+    c: Math.floor((Number(res.c) / total) * 100),
+    d: Math.floor((Number(res.d) / total) * 100),
+  };
+  tweets[tweetsIndex].total = total;
+  tweets[tweetsIndex].percents = percents;
+  console.log(tweets[tweetsIndex]); // the poll are being vote
+  displayVoteResult(tweetsIndex);
+  isVoted = true;
+  isPolling = false;
+  displayTweets(tweets);
+}
+// display vote result
+function displayVoteResult(tweetsIndex) {
+  const res = tweets[tweetsIndex];
+  return `
+	  <div class="bargraph">
+    	<div id="bar1" class="bar" style="flex-basis: ${
+        res.percents.a
+      }%" data-vote="a">${res.poll[0]} 
+  </div>
+    <div id="percentage1">${res.percents.a}%</div>
+  </div>
+	`;
 }
 /*
 ----------------------------------------------
@@ -293,9 +329,6 @@ function addEmoji(e) {
 
 // display from tweets array
 function displayTweets(tw) {
-  if (!tw.length > 0) {
-    return;
-  }
   const content = tw
     .map(
       (tweet, index) => `
@@ -333,6 +366,36 @@ function displayTweets(tw) {
                     )
                     .join('')}
 										</div>`
+                : ''
+            }						
+						${
+              isVoted
+                ? `<div class="bargraph">
+    					<div id="bar1" class="bar" style="flex-basis: ${
+                tweet.percents.a
+              }%" data-vote="a">${tweet.poll[0]} 
+								</div>
+			
+								<div id="percentage2">${tweet.percents.b}%</div>
+							</div><div class="bargraph">
+									<div id="bar1" class="bar" style="flex-basis: ${
+                    tweet.percents.b
+                  }%" data-vote="a">${tweet.poll[1]} 
+							</div>
+								<div id="percentage3">${tweet.percents.c}%</div>
+							</div><div class="bargraph">
+									<div id="bar3" class="bar" style="flex-basis: ${
+                    tweet.percents.c
+                  }%" data-vote="a">${tweet.poll[2]} 
+							</div>
+							<div id="percentage4">${tweet.percents.d}%</div>
+						</div><div class="bargraph">
+								<div id="bar4" class="bar" style="flex-basis: ${
+                  tweet.percents.d
+                }%" data-vote="a">${tweet.poll[3]} 
+						</div>
+							<div id="percentage1">${tweet.percents.d}%</div>
+ 					 </div>`
                 : ''
             }
 						 <div id="reactions" class="btn-group mr-2">
