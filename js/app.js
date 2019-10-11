@@ -12,10 +12,9 @@ const gifsArea = document.querySelector('#gifsArea');
 
 let gifs = [];
 let selectedGif = '';
-let isImg = false;
 let isMoving = false;
-let isPolling = false;
-let isVoted = false;
+// let isPolling = false;
+// let isVoted = false;
 let votes = {};
 // Preview place
 const imgGifPoll = document.querySelector('#imgGifPoll');
@@ -38,7 +37,7 @@ const exitBtns = document.querySelectorAll('.exitBtn');
 const tweetButton = document.querySelector('#tweet');
 const textArea = document.querySelector('#textarea');
 const main = document.querySelector('main');
-const tweets = [];
+let tweets = JSON.parse(localStorage.getItem('tweets')) || [];
 
 // functions ----------------------------------------
 // separate tweet to text, hashtag and no hashtag, and store into object
@@ -50,20 +49,24 @@ function handleTweet(searchText) {
     ? document.querySelector('#tweetImg').dataset.src
     : false;
   if (tweetImg) {
-    isImg = true;
     tweet.img = tweetImg;
   }
   if (selectedGif) {
-    isImg = true;
     tweet.img = selectedGif;
   }
-  if (isPolling) {
+  if (
+    document.querySelector('#pollchoice1') &&
+    document.querySelector('#pollchoice2') &&
+    document.querySelector('#pollchoice3') &&
+    document.querySelector('#pollchoice4')
+  ) {
     tweet.poll = [
       document.querySelector('#pollchoice1').value,
       document.querySelector('#pollchoice2').value,
       document.querySelector('#pollchoice3').value,
       document.querySelector('#pollchoice4').value,
     ];
+    tweet.isPolling = true;
   }
   if (!hashtags) {
     tweet.tweet = searchText;
@@ -173,7 +176,6 @@ Poll
 */
 // Show form after pollBtn click
 function insertPoll() {
-  isPolling = true;
   textArea.placeholder = 'Ask a question...';
   imgGifPoll.innerHTML = `
                 <form>
@@ -225,7 +227,6 @@ function insertPoll() {
                     </div>
                   </div>
                 </form>
-
 	`;
 }
 // Get vote data
@@ -235,7 +236,6 @@ async function getVotes() {
   );
   const voteJson = await res.json();
   votes = await voteJson;
-  console.log(votes);
 }
 // Store input in to object
 async function vote(e) {
@@ -243,7 +243,7 @@ async function vote(e) {
     await getVotes();
     // console.log(voteResult);
     const tweetsIndex = e.target.parentNode.dataset.index;
-    console.log(tweets[tweetsIndex]); // the poll are being vote
+    // the poll are being vote
     tweets[tweetsIndex].result = votes;
     getPercent(tweetsIndex);
   }
@@ -259,11 +259,11 @@ function getPercent(tweetsIndex) {
   };
   tweets[tweetsIndex].total = total;
   tweets[tweetsIndex].percents = percents;
-  console.log(tweets[tweetsIndex]); // the poll are being vote
+  // the poll are being vote
   displayVoteResult(tweetsIndex);
-  isVoted = true;
-  isPolling = false;
-  displayTweets(tweets);
+  tweets[tweetsIndex].isVoted = true;
+  tweets[tweetsIndex].isPolling = false;
+  displayTweets();
 }
 // display vote result
 function displayVoteResult(tweetsIndex) {
@@ -326,10 +326,15 @@ function addEmoji(e) {
   e.preventDefault();
   textArea.value += e.target.dataset.char;
 }
+function remember() {
+  localStorage.removeItem('tweets');
+  localStorage.setItem('tweets', JSON.stringify(tweets));
+  tweets = JSON.parse(localStorage.getItem('tweets'));
+}
 
 // display from tweets array
-function displayTweets(tw) {
-  const content = tw
+function displayTweets() {
+  const content = tweets
     .map(
       (tweet, index) => `
 				<div class="fb container row justify-content-start border rounded p-3 mt-3">
@@ -356,7 +361,7 @@ function displayTweets(tw) {
                 : ''
             }						
 						${
-              isPolling
+              tweet.isPolling
                 ? `<div class="poll flex-col" data-index="${index}">
 									${tweet.poll
                     .map(
@@ -369,7 +374,7 @@ function displayTweets(tw) {
                 : ''
             }						
 						${
-              isVoted
+              tweet.isVoted
                 ? `<div class="bargraph">
     					<div id="bar1" class="bar" style="flex-basis: ${
                 tweet.percents.a
@@ -395,7 +400,9 @@ function displayTweets(tw) {
                 }%" data-vote="a">${tweet.poll[3]} 
 						</div>
 							<div id="percentage1">${tweet.percents.d}%</div>
- 					 </div>`
+						</div>
+						<div>${tweet.total} votes</div>
+						`
                 : ''
             }
 						 <div id="reactions" class="btn-group mr-2">
@@ -427,6 +434,7 @@ function displayTweets(tw) {
     )
     .join('');
   main.innerHTML = content;
+  remember();
 }
 // Store tweet to tweets array and clean textarea and preview
 // hashtag links: map the noHashtag array in object
@@ -437,9 +445,8 @@ function tweeting(e) {
   textArea.value = '';
   imgGifPoll.innerHTML = '';
   selectedGif = '';
-  isImg = false;
   emojiPopup.classList.add('hide');
-  displayTweets(tweets);
+  displayTweets();
 }
 
 // EventListeners----------------------------------------
@@ -470,3 +477,5 @@ emojiArea.addEventListener('click', addEmoji);
 // emoji---------------------------------------------------
 // tweet button
 tweetButton.addEventListener('click', tweeting);
+// load previous tweets
+document.addEventListener('DOMContentLoaded', displayTweets);
