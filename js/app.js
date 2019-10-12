@@ -40,9 +40,8 @@ const main = document.querySelector('main');
 let tweets = JSON.parse(localStorage.getItem('tweets')) || [];
 
 // functions ----------------------------------------
-// separate tweet to text, hashtag and no hashtag, and store into object
 function handleTweet(searchText) {
-  const regex = /#(\w+)/g;
+  const regex = new RegExp(/#(\w+)/gi);
   const tweet = {};
   const hashtags = searchText.match(regex);
   const tweetImg = document.querySelector('#tweetImg')
@@ -68,20 +67,21 @@ function handleTweet(searchText) {
     ];
     tweet.isPolling = true;
   }
-  if (!hashtags) {
-    tweet.tweet = searchText;
-    tweet.hashtag = [];
+  if (hashtags) {
+    tweet.tweet = hashtagToLink();
   } else {
-    // get the text before #
-    const index = searchText.indexOf('#');
-    const text = searchText.slice(0, index).trim();
-    // remove # before hashtag
-    const hashtag = hashtags.map(item => item.replace('#', ''));
-    tweet.tweet = text;
-    tweet.hashtag = hashtag;
+    tweet.tweet = searchText;
   }
-  // console.log(tweet);
-
+  function hashtagToLink() {
+    let text = searchText;
+    for (let i = 0; i < hashtags.length; i++) {
+      text = text.replace(
+        hashtags[i],
+        `	<a href=https://twitter.com/hashtag/${hashtags[i]}?src=hashtag_click>${hashtags[i]}</a>`
+      );
+    }
+    return text;
+  }
   return tweet;
 }
 /*
@@ -429,14 +429,6 @@ function displayTweets() {
 					<div class="pl-2" data-index="${index}"> 
 						<div>Louis L <span class="text-secondary ">@yhl123</span></div>
 						<div class="mt-1">${tweet.tweet} 
-						${tweet.hashtag
-
-              .map(
-                item => `
-						<a href=https://twitter.com/hashtag/${item}?src=hashtag_click>#${item}</a>
-						`
-              )
-              .join('')}
 						</div>
 						${tweet.img ? displayImg(tweet) : ''}						
 						${tweet.isPolling ? displayPoll(tweet, index) : ''}						
