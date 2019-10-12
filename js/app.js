@@ -262,16 +262,20 @@ function getPercent(tweetsIndex) {
   tweets[tweetsIndex].total = total;
   tweets[tweetsIndex].percents = percents;
   // the poll are being vote
-  displayVoteResult(tweetsIndex);
+  displayVoteResult(tweets[tweetsIndex]);
   tweets[tweetsIndex].isVoted = true;
   tweets[tweetsIndex].isPolling = false;
   displayTweets();
 }
 // display vote result
 
-function showSelected(tweet) {
-  const change = document.querySelector(`[data-vote=${tweet.selected}]`);
-  change.classList.add('primary');
+function showSelected() {
+  const bars = [...document.querySelectorAll('.bar')];
+  for (let i = 0; i < tweets.length; i++) {
+    if (tweets[i].selected === bars[i].dataset.vote) {
+      bars[i].classList.add('bg-primary');
+    }
+  }
 }
 /*
 ----------------------------------------------
@@ -328,79 +332,88 @@ Display
 */
 function displayTweetHead() {
   return `<div class="fb container row justify-content-start border rounded p-3 mt-3">
-					<img
-						class="avatar"
-						src="https://avatars3.githubusercontent.com/u/43277189?v=4"
-						alt=""
-					/>`;
+						<img
+							class="avatar"
+							src="https://avatars3.githubusercontent.com/u/43277189?v=4"
+							alt=""
+						/>`;
 }
 function displayImg(tweet) {
   return `<img id="tweetImg" class="thumb" src="${tweet.img}"  style="width:100%"/>`;
 }
 function displayPoll(tweet, index) {
   return `<div class="poll flex-col" data-index="${index}">
-										<button class="vote" data-selected="a">${tweet.poll[0]}</button>
-										<button class="vote" data-selected="b">${tweet.poll[1]}</button>
-										<button class="vote" data-selected="c">${tweet.poll[2]}</button>
-										<button class="vote" data-selected="d">${tweet.poll[3]}</button>
-									</div>`;
+						<button class="vote" data-selected="a">${tweet.poll[0]}</button>
+						<button class="vote" data-selected="b">${tweet.poll[1]}</button>
+						<button class="vote" data-selected="c">${tweet.poll[2]}</button>
+						<button class="vote" data-selected="d">${tweet.poll[3]}</button>
+					</div>`;
 }
-function displayVoteResult(tweet) {
-  return `<div class="bargraph">
-    					<div id="bar1" class="bar" style="flex-basis: ${
-                tweet.percents.a
-              }%" data-vote="a">${tweet.poll[0]} 
-								</div>
-			
-								<div id="percentage2">${tweet.percents.b}%</div>
-							</div><div class="bargraph">
-									<div id="bar1" class="bar" style="flex-basis: ${
-                    tweet.percents.b
-                  }%" data-vote="c">${tweet.poll[1]} 
-							</div>
-								<div id="percentage3">${tweet.percents.c}%</div>
-							</div><div class="bargraph">
-									<div id="bar3" class="bar" style="flex-basis: ${
-                    tweet.percents.c
-                  }%" data-vote="b">${tweet.poll[2]} 
-							</div>
-							<div id="percentage4">${tweet.percents.d}%</div>
-						</div><div class="bargraph">
-								<div id="bar4" class="bar" style="flex-basis: ${
-                  tweet.percents.d
-                }%" data-vote="d">${tweet.poll[3]} 
-						</div>
-							<div id="percentage1">${tweet.percents.d}%</div>
-						</div>
-						<div>${tweet.total} votes</div>
+function displayVoteResult(tweet, index) {
+  return `
+		<div class="bargraph">
+    	<div id="vote${index}bar1" class="bar ${
+    tweet.selected === 'a' ? 'bg-primary' : ''
+  }" style="flex-basis: ${tweet.percents.a}%" data-vote="a">${tweet.poll[0]} ${
+    tweet.selected === 'a' ? '&check;' : ''
+  } </div>
+			<div id="percentage1">${tweet.percents.a}%</div>
+		</div>
+		<div class="bargraph">
+			<div id="vote${index}bar2" class="bar ${
+    tweet.selected === 'b' ? 'bg-primary' : ''
+  }" style="flex-basis: ${tweet.percents.b}%" data-vote="b">${tweet.poll[1]} ${
+    tweet.selected === 'b' ? '&check;' : ''
+  } </div>
+			<div id="percentage2">${tweet.percents.b}%</div>
+		</div>
+		<div class="bargraph">
+			<div id="vote${index}bar3" class="bar ${
+    tweet.selected === 'c' ? 'bg-primary' : ''
+  }" style="flex-basis: ${tweet.percents.c}%" data-vote="c">${tweet.poll[2]}  ${
+    tweet.selected === 'c' ? '&check;' : ''
+  } 
+		</div>
+			<div id="percentage3">${tweet.percents.c}%</div>
+		</div>
+		<div class="bargraph">
+			<div id="vote${index}bar4" class="bar ${
+    tweet.selected === 'd' ? 'bg-primary' : ''
+  }" style="flex-basis: ${tweet.percents.d}%" data-vote="d">${tweet.poll[3]}  ${
+    tweet.selected === 'd' ? '&check;' : ''
+  } 
+		</div>
+			<div id="percentage4">${tweet.percents.d}%</div>
+		</div>
+		<div>${tweet.total} votes</div>
 						`;
 }
 function displayReactions() {
   return `<div id="reactions" class="btn-group mr-2">
-                        <button
-                            type="button"
-                            class="btn btn-secondary mdi mdi-message-outline"
-                            aria-label="reply"
-                        ></button>
-                        <button
-                            type="button"
-                            class="btn btn-secondary mdi mdi-twitter-retweet"
-                            aria-label="retweet"
-                        ></button>
-                        <button
-                            type="button"
-                            class="btn btn-secondary mdi mdi-heart-outline"
-                            aria-label="like"
-                            style=""
-                        ></button>
-                        <button
-                            type="button"
-                            class="btn btn-secondary mdi mdi-upload"
-                            aria-label="share"
-                        ></button>
-                    </div>
-					</div>
-				</div>`;
+						<button
+								type="button"
+								class="btn btn-secondary mdi mdi-message-outline"
+								aria-label="reply"
+						></button>
+						<button
+								type="button"
+								class="btn btn-secondary mdi mdi-twitter-retweet"
+								aria-label="retweet"
+						></button>
+						<button
+								type="button"
+								class="btn btn-secondary mdi mdi-heart-outline"
+								aria-label="like"
+								style=""
+						></button>
+						<button
+								type="button"
+								class="btn btn-secondary mdi mdi-upload"
+								aria-label="share"
+						></button>
+				</div>
+			</div>
+		</div>`; // end container;
 }
 function remember() {
   localStorage.removeItem('tweets');
@@ -427,7 +440,7 @@ function displayTweets() {
 						</div>
 						${tweet.img ? displayImg(tweet) : ''}						
 						${tweet.isPolling ? displayPoll(tweet, index) : ''}						
-						${tweet.isVoted ? displayVoteResult(tweet) : ''}
+						${tweet.isVoted ? displayVoteResult(tweet, index) : ''}
 						${displayReactions()}
 		`
     )
