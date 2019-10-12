@@ -243,8 +243,10 @@ async function vote(e) {
     await getVotes();
     // console.log(voteResult);
     const tweetsIndex = e.target.parentNode.dataset.index;
+    const select = e.target.dataset.selected;
     // the poll are being vote
     tweets[tweetsIndex].result = votes;
+    tweets[tweetsIndex].selected = select;
     getPercent(tweetsIndex);
   }
 }
@@ -266,17 +268,10 @@ function getPercent(tweetsIndex) {
   displayTweets();
 }
 // display vote result
-function displayVoteResult(tweetsIndex) {
-  const res = tweets[tweetsIndex];
-  return `
-	  <div class="bargraph">
-    	<div id="bar1" class="bar" style="flex-basis: ${
-        res.percents.a
-      }%" data-vote="a">${res.poll[0]} 
-  </div>
-    <div id="percentage1">${res.percents.a}%</div>
-  </div>
-	`;
+
+function showSelected(tweet) {
+  const change = document.querySelector(`[data-vote=${tweet.selected}]`);
+  change.classList.add('primary');
 }
 /*
 ----------------------------------------------
@@ -326,56 +321,32 @@ function addEmoji(e) {
   e.preventDefault();
   textArea.value += e.target.dataset.char;
 }
-function remember() {
-  localStorage.removeItem('tweets');
-  localStorage.setItem('tweets', JSON.stringify(tweets));
-  tweets = JSON.parse(localStorage.getItem('tweets'));
-}
-
-// display from tweets array
-function displayTweets() {
-  const content = tweets
-    .map(
-      (tweet, index) => `
-				<div class="fb container row justify-content-start border rounded p-3 mt-3">
+/*
+----------------------------------------------
+Display
+----------------------------------------------
+*/
+function displayTweetHead() {
+  return `<div class="fb container row justify-content-start border rounded p-3 mt-3">
 					<img
 						class="avatar"
 						src="https://avatars3.githubusercontent.com/u/43277189?v=4"
 						alt=""
-					/>
-					<div class="pl-2" data-index="${index}"> 
-						<div>Louis L <span class="text-secondary ">@yhl123</span></div>
-						<div class="mt-1">${tweet.tweet} 
-						${tweet.hashtag
-
-              .map(
-                item => `
-						<a href=https://twitter.com/hashtag/${item}?src=hashtag_click>#${item}</a>
-						`
-              )
-              .join('')}
-						</div>
-						${
-              tweet.img
-                ? `<img id="tweetImg" class="thumb" src="${tweet.img}"  style="width:100%"/>`
-                : ''
-            }						
-						${
-              tweet.isPolling
-                ? `<div class="poll flex-col" data-index="${index}">
-									${tweet.poll
-                    .map(
-                      (choice, i) => `
-										<button class="vote" value="${i}">${choice}</button>
-										`
-                    )
-                    .join('')}
-										</div>`
-                : ''
-            }						
-						${
-              tweet.isVoted
-                ? `<div class="bargraph">
+					/>`;
+}
+function displayImg(tweet) {
+  return `<img id="tweetImg" class="thumb" src="${tweet.img}"  style="width:100%"/>`;
+}
+function displayPoll(tweet, index) {
+  return `<div class="poll flex-col" data-index="${index}">
+										<button class="vote" data-selected="a">${tweet.poll[0]}</button>
+										<button class="vote" data-selected="b">${tweet.poll[1]}</button>
+										<button class="vote" data-selected="c">${tweet.poll[2]}</button>
+										<button class="vote" data-selected="d">${tweet.poll[3]}</button>
+									</div>`;
+}
+function displayVoteResult(tweet) {
+  return `<div class="bargraph">
     					<div id="bar1" class="bar" style="flex-basis: ${
                 tweet.percents.a
               }%" data-vote="a">${tweet.poll[0]} 
@@ -385,27 +356,27 @@ function displayTweets() {
 							</div><div class="bargraph">
 									<div id="bar1" class="bar" style="flex-basis: ${
                     tweet.percents.b
-                  }%" data-vote="a">${tweet.poll[1]} 
+                  }%" data-vote="c">${tweet.poll[1]} 
 							</div>
 								<div id="percentage3">${tweet.percents.c}%</div>
 							</div><div class="bargraph">
 									<div id="bar3" class="bar" style="flex-basis: ${
                     tweet.percents.c
-                  }%" data-vote="a">${tweet.poll[2]} 
+                  }%" data-vote="b">${tweet.poll[2]} 
 							</div>
 							<div id="percentage4">${tweet.percents.d}%</div>
 						</div><div class="bargraph">
 								<div id="bar4" class="bar" style="flex-basis: ${
                   tweet.percents.d
-                }%" data-vote="a">${tweet.poll[3]} 
+                }%" data-vote="d">${tweet.poll[3]} 
 						</div>
 							<div id="percentage1">${tweet.percents.d}%</div>
 						</div>
 						<div>${tweet.total} votes</div>
-						`
-                : ''
-            }
-						 <div id="reactions" class="btn-group mr-2">
+						`;
+}
+function displayReactions() {
+  return `<div id="reactions" class="btn-group mr-2">
                         <button
                             type="button"
                             class="btn btn-secondary mdi mdi-message-outline"
@@ -429,13 +400,42 @@ function displayTweets() {
                         ></button>
                     </div>
 					</div>
-				</div>
+				</div>`;
+}
+function remember() {
+  localStorage.removeItem('tweets');
+  localStorage.setItem('tweets', JSON.stringify(tweets));
+  tweets = JSON.parse(localStorage.getItem('tweets'));
+}
+// display from tweets array
+function displayTweets() {
+  const content = tweets
+    .map(
+      (tweet, index) => `
+						${displayTweetHead()}
+					<div class="pl-2" data-index="${index}"> 
+						<div>Louis L <span class="text-secondary ">@yhl123</span></div>
+						<div class="mt-1">${tweet.tweet} 
+						${tweet.hashtag
+
+              .map(
+                item => `
+						<a href=https://twitter.com/hashtag/${item}?src=hashtag_click>#${item}</a>
+						`
+              )
+              .join('')}
+						</div>
+						${tweet.img ? displayImg(tweet) : ''}						
+						${tweet.isPolling ? displayPoll(tweet, index) : ''}						
+						${tweet.isVoted ? displayVoteResult(tweet) : ''}
+						${displayReactions()}
 		`
     )
     .join('');
   main.innerHTML = content;
   remember();
 }
+
 // Store tweet to tweets array and clean textarea and preview
 // hashtag links: map the noHashtag array in object
 function tweeting(e) {
