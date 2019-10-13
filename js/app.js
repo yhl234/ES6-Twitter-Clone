@@ -416,7 +416,7 @@ function displayTweets() {
     .map(
       (tweet, index) => `
 						${displayTweetHead()}
-					<div class="pl-2" data-index="${index}"> 
+					<div class="pl-2 col" data-index="${index}"> 
 						<div>Louis L <span class="text-secondary ">@yhl123</span></div>
 						<div class="mt-1">${tweet.tweet} 
 						</div>

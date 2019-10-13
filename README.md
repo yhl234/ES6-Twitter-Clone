@@ -1,6 +1,6 @@
 # Twitter Clone
 
-This is Twitter clone made by ES6 Javascript
+This is Twitter clone made by ES6 Javascript, Giphy api, emoji api and Mockaroo.
 
 ## ES6 feature
 
@@ -61,12 +61,13 @@ async function loadEmoji() {
 
 ```js
 function displayPoll(tweet, index) {
-	return `<div class="poll flex-col" data-index="${index}">
-						<button class="vote" data-selected="a">${tweet.poll[0]}</button>
-						<button class="vote" data-selected="b">${tweet.poll[1]}</button>
-						<button class="vote" data-selected="c">${tweet.poll[2]}</button>
-						<button class="vote" data-selected="d">${tweet.poll[3]}</button>
-					</div>`;
+	return `
+	<div class="poll flex-col" data-index="${index}">
+		<button class="vote" data-selected="a">${tweet.poll[0]}</button>
+		<button class="vote" data-selected="b">${tweet.poll[1]}</button>
+		<button class="vote" data-selected="c">${tweet.poll[2]}</button>
+		<button class="vote" data-selected="d">${tweet.poll[3]}</button>
+	</div>`;
 }
 ```
 
