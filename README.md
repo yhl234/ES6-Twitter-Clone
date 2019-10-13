@@ -94,3 +94,7 @@ function addEmoji(e) {
 	textArea.value += e.target.dataset.char;
 }
 ```
+## Screenshot
+
+![alt text](https://github.com/yhl234/19F-Adv-Client-Side-JavaScript/blob/master/screenshot.png "Demo screenshot")
+
