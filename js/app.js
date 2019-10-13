@@ -13,8 +13,6 @@ const gifsArea = document.querySelector('#gifsArea');
 let gifs = [];
 let selectedGif = '';
 let isMoving = false;
-// let isPolling = false;
-// let isVoted = false;
 let votes = {};
 // Preview place
 const imgGifPoll = document.querySelector('#imgGifPoll');
@@ -269,14 +267,6 @@ function getPercent(tweetsIndex) {
 }
 // display vote result
 
-function showSelected() {
-  const bars = [...document.querySelectorAll('.bar')];
-  for (let i = 0; i < tweets.length; i++) {
-    if (tweets[i].selected === bars[i].dataset.vote) {
-      bars[i].classList.add('bg-primary');
-    }
-  }
-}
 /*
 ----------------------------------------------
 Emoji
