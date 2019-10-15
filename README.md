@@ -4,7 +4,7 @@ This is Twitter clone made by ES6 Javascript, Giphy api, emoji api and Mockaroo.
 
 ## ES6 feature
 
-### 1. Template Literals
+### 1. [Template Literals](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals)
 
 ```js
 function displayImg(tweet) {
@@ -13,13 +13,13 @@ function displayImg(tweet) {
 }
 ```
 
-### 2. Arrow Functions,
+### 2. [Arrow Functions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions)
 
 ```js
 categoryEmoji.forEach(i => i.addEventListener("click", searchEmojis));
 ```
 
-### 3. Spread Operator,
+### 3. [Spread Operator](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax)
 
 ```js
 async function loadEmoji() {
@@ -38,7 +38,7 @@ async function loadEmoji() {
 }
 ```
 
-### 4. .map
+### 4. [.map](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map)
 
 ```js
 async function loadEmoji() {
@@ -57,7 +57,7 @@ async function loadEmoji() {
 }
 ```
 
-### 5. data-attributes
+### 5. [data-attributes](https://developer.mozilla.org/en-US/docs/Learn/HTML/Howto/Use_data_attributes)
 
 ```js
 function displayPoll(tweet, index) {
@@ -71,7 +71,7 @@ function displayPoll(tweet, index) {
 }
 ```
 
-### 6. async/await/fetch,
+### 6. [Async Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function)
 
 ```js
 async function getVotes() {
@@ -83,7 +83,7 @@ async function getVotes() {
 }
 ```
 
-### 7. Event Delegation
+### 7. [Event Delegation](https://gomakethings.com/whats-the-difference-between-javascript-event-delegation-bubbling-and-capturing/)
 
 ```js
 function addEmoji(e) {
@@ -98,3 +98,8 @@ function addEmoji(e) {
 ## Screenshot
 
 ![alt text](https://github.com/yhl234/19F-Adv-Client-Side-JavaScript/blob/master/screenshot.png "Demo screenshot")
+
+## Known Bugs
+
+1. Upload picture doesn't work in Safari.
+2. Upload picture button fails in FireFox
