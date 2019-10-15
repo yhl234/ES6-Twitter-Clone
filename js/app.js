@@ -1,8 +1,3 @@
-// Avatar----------------------------------------
-const AVATAR_URL = 'https://avatars3.githubusercontent.com/u/43277189?v=4';
-const myAvatar = document.querySelectorAll('.myAvatar');
-myAvatar.forEach(img => (img.src = AVATAR_URL));
-
 // Declare for Gifs upload
 const gifBtn = document.querySelector('#gifBtn');
 const searchGifBtn = document.querySelector('#searchGifBtn');
@@ -57,19 +52,25 @@ function handleTweet(searchText) {
     document.querySelector('#pollchoice3') &&
     document.querySelector('#pollchoice4')
   ) {
-    tweet.poll = [
+    const poll = [
       document.querySelector('#pollchoice1').value,
       document.querySelector('#pollchoice2').value,
       document.querySelector('#pollchoice3').value,
       document.querySelector('#pollchoice4').value,
     ];
-    tweet.isPolling = true;
+    const testPoll = poll.filter(e => e === '');
+    if (testPoll.length === 0) {
+      tweet.poll = poll;
+      tweet.isPolling = true;
+    }
   }
+
   if (hashtags) {
     tweet.tweet = hashtagToLink();
   } else {
     tweet.tweet = searchText;
   }
+
   function hashtagToLink() {
     let text = searchText;
     for (let i = 0; i < hashtags.length; i++) {
@@ -161,7 +162,7 @@ function chooseGif(e) {
 function handleFileSelect(e) {
   const reader = new FileReader();
   reader.addEventListener('load', evn => {
-    imgGifPoll.innerHTML = `<img id="tweetImg" class="thumb" src="${evn.target.result}" data-src="${evn.target.result}" style="width:100%"/>`;
+    imgGifPoll.innerHTML = `<img class="thumb" src="${evn.target.result}" data-src="${evn.target.result}" style="width:100%"/>`;
   });
   // read the image file as a data url base
   reader.readAsDataURL(e.target.files[0]);
@@ -329,7 +330,13 @@ function displayTweetHead() {
 						/>`;
 }
 function displayImg(tweet) {
-  return `<img id="tweetImg" class="thumb" src="${tweet.img}"  style="width:100%"/>`;
+  if (tweet.img.includes('gif')) {
+    return `<video class="thumb" src="${tweet.img.replace(
+      /200.gif/g,
+      'giphy-loop.mp4'
+    )}"  style="width:100%" autoplay/>`;
+  }
+  return `<img class="thumb" src="${tweet.img}"  style="width:100%"/>`;
 }
 function displayPoll(tweet, index) {
   return `<div class="poll flex-col" data-index="${index}">
@@ -392,9 +399,8 @@ function displayReactions() {
 						></button>
 						<button
 								type="button"
-								class="btn btn-secondary mdi mdi-heart-outline"
+								class="mdi btn btn-secondary heart"
 								aria-label="like"
-								style=""
 						></button>
 						<button
 								type="button"
@@ -404,6 +410,18 @@ function displayReactions() {
 				</div>
 			</div>
 		</div>`; // end container;
+}
+function animateReactions() {
+  const likes = document.querySelectorAll('.heart');
+  likes.forEach(like => {
+    like.addEventListener('click', e =>
+      e.target.classList.toggle('is_animating')
+    );
+    like.addEventListener('animationend', e => {
+      e.target.classList.remove('is_animating');
+      e.target.classList.toggle('liked');
+    });
+  });
 }
 function remember() {
   localStorage.removeItem('tweets');
@@ -418,17 +436,19 @@ function displayTweets() {
 						${displayTweetHead()}
 					<div class="pl-2 col" data-index="${index}"> 
 						<div>Louis L <span class="text-secondary ">@yhl123</span></div>
-						<div class="mt-1">${tweet.tweet} 
-						</div>
-						${tweet.img ? displayImg(tweet) : ''}						
-						${tweet.isPolling ? displayPoll(tweet, index) : ''}						
+						<div class="mt-1">
+						${tweet.tweet} 
+						${tweet.img ? displayImg(tweet) : ''}	
+						${tweet.isPolling ? displayPoll(tweet, index) : ''}
 						${tweet.isVoted ? displayVoteResult(tweet, index) : ''}
+						</div>
 						${displayReactions()}
 		`
     )
     .join('');
   main.innerHTML = content;
   remember();
+  animateReactions();
 }
 
 // Store tweet to tweets array and clean textarea and preview
@@ -436,6 +456,9 @@ function displayTweets() {
 function tweeting(e) {
   e.preventDefault();
   const tweet = handleTweet(textArea.value);
+  if (tweet.tweet === '' && !tweet.poll && !tweet.img) {
+    return;
+  }
   tweets.unshift(tweet);
   textArea.value = '';
   imgGifPoll.innerHTML = '';

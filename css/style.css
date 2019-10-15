@@ -59,6 +59,8 @@ button.mdi {
 	color: #1da1f2;
 	background-color: #fff;
 	border: none;
+	height: 50px;
+	width: 50px;
 }
 
 form {
@@ -244,4 +246,34 @@ img[data-category],
 
 .chosen {
 	background-color: powderblue;
+}
+
+/* Twitter Like Animation Example */
+/* https://codepen.io/chrismabry/pen/ZbjZEj */
+.heart {
+	cursor: pointer;
+	height: 50px;
+	width: 50px;
+	background-image: url("https://abs.twimg.com/a/1446542199/img/t1/web_heart_animation.png");
+	background-position: left;
+	background-repeat: no-repeat;
+	background-size: 2900%;
+}
+
+.heart:hover,
+.liked {
+	background-position: right;
+}
+
+.is_animating {
+	animation: heart-burst 0.8s steps(28) 1;
+}
+
+@keyframes heart-burst {
+	0% {
+		background-position: left;
+	}
+	100% {
+		background-position: right;
+	}
 }
