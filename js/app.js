@@ -37,8 +37,8 @@ function handleTweet(searchText) {
   const regex = new RegExp(/#(\w+)/gi);
   const tweet = {};
   const hashtags = searchText.match(regex);
-  const tweetImg = document.querySelector('#tweetImg')
-    ? document.querySelector('#tweetImg').dataset.src
+  const tweetImg = imgGifPoll.querySelector('.thumb')
+    ? imgGifPoll.querySelector('.thumb').dataset.src
     : false;
   if (tweetImg) {
     tweet.img = tweetImg;
@@ -330,7 +330,7 @@ function displayTweetHead() {
 						/>`;
 }
 function displayImg(tweet) {
-  if (tweet.img.includes('gif')) {
+  if (tweet.img.includes('.gif')) {
     return `<video class="thumb" src="${tweet.img.replace(
       /200.gif/g,
       'giphy-loop.mp4'
