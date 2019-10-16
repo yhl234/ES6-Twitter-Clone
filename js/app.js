@@ -6,6 +6,7 @@ const gifPopup = document.querySelector('#gifPopup');
 const gifsArea = document.querySelector('#gifsArea');
 
 let gifs = [];
+
 let selectedGif = '';
 let isMoving = false;
 let votes = {};
